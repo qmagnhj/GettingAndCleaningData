@@ -45,9 +45,11 @@ constructDataset <- function (type) {
     
     print("Adding activities to dataset")
     
-    Yvalues <- data.frame(Activity = readLines(YfileToRead))
+    Yvalues <- data.frame(Activity = readLines(YfileToRead), 
+                          stringsAsFactors = FALSE)
     YLabels <- readLines(fname_activitylables)
-    YLabels <- as.data.frame(do.call(rbind,strsplit(YLabels, " ")))
+    YLabels <- as.data.frame(do.call(rbind,strsplit(YLabels, " ")), 
+                             stringsAsFactors = FALSE)
     names(YLabels) <- c("Activity","Label")
     YAll <- left_join(Yvalues, YLabels)
     
@@ -59,14 +61,15 @@ constructDataset <- function (type) {
     print("Dataset constructed")
     
     # Reorder columns so Subject and Activity are in the rightmost columns
-    select(df, Subject, Activity, everything())
+    df<-select(df, Subject, Activity, everything())
+    df
 }
 
 
 ################################################################################
 # 1.Merges the training and the test sets to create one data set.
 
-totalDf <- rbind(constructDataset("test"),constructDataset("train"))
+totalDf <- rbind(constructDataset("train"),constructDataset("test"))
 
 
 ################################################################################
